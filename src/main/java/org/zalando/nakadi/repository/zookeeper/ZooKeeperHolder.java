@@ -2,6 +2,7 @@ package org.zalando.nakadi.repository.zookeeper;
 
 import org.apache.curator.ensemble.EnsembleProvider;
 import org.apache.curator.ensemble.exhibitor.DefaultExhibitorRestClient;
+import org.apache.curator.ensemble.exhibitor.ExhibitorEnsembleProvider;
 import org.apache.curator.ensemble.exhibitor.ExhibitorRestClient;
 import org.apache.curator.ensemble.exhibitor.Exhibitors;
 import org.apache.curator.ensemble.fixed.FixedEnsembleProvider;
@@ -45,18 +46,17 @@ public class ZooKeeperHolder {
                             throw new RuntimeException("There is no backup connection string (or it is wrong)");
                         });
                 final ExhibitorRestClient exhibitorRestClient = new DefaultExhibitorRestClient();
-                final org.apache.curator.ensemble.exhibitor.ExhibitorEnsembleProvider result =
-                        new org.apache.curator.ensemble.exhibitor.ExhibitorEnsembleProvider(
-                                exhibitors,
-                                exhibitorRestClient,
-                                "/exhibitor/v1/cluster/list",
-                                EXHIBITOR_POLLING_MS,
-                                new ExponentialBackoffRetry(EXHIBITOR_RETRY_TIME, EXHIBITOR_RETRY_MAX)) {
-                            @Override
-                            public String getConnectionString() {
-                                return super.getConnectionString() + conn.getPathPrepared();
-                            }
-                        };
+                final ExhibitorEnsembleProvider result = new ExhibitorEnsembleProvider(
+                        exhibitors,
+                        exhibitorRestClient,
+                        "/exhibitor/v1/cluster/list",
+                        EXHIBITOR_POLLING_MS,
+                        new ExponentialBackoffRetry(EXHIBITOR_RETRY_TIME, EXHIBITOR_RETRY_MAX)) {
+                    @Override
+                    public String getConnectionString() {
+                        return super.getConnectionString() + conn.getPathPrepared();
+                    }
+                };
                 result.pollForInitialEnsemble();
                 return result;
             case ZOOKEEPER:

@@ -13,7 +13,7 @@ public class ZookeeperConfig {
     @Bean
     public ZooKeeperHolder zooKeeperHolder(final Environment environment) throws Exception {
         return new ZooKeeperHolder(
-                ZookeeperConnection.valueOf(environment.getProperty("nakadi.zookeeper.connection_string")),
+                ZookeeperConnection.valueOf(environment.getProperty("nakadi.zookeeper.connectionString")),
                 Integer.parseInt(environment.getProperty("nakadi.zookeeper.sessionTimeoutMs")),
                 Integer.parseInt(environment.getProperty("nakadi.zookeeper.connectionTimeoutMs"))
         );

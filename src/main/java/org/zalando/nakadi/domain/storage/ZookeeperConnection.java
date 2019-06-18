@@ -7,7 +7,6 @@ import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -62,7 +61,7 @@ public class ZookeeperConnection {
 
     @Override
     public boolean equals(final Object o) {
-        if (this == o)  {
+        if (this == o) {
             return true;
         }
         if (o == null || getClass() != o.getClass()) {
@@ -88,13 +87,11 @@ public class ZookeeperConnection {
             throw new RuntimeException("Unsupported format of zk connection string " + connStr);
         }
         final String typeString = m.group(1);
-        final Optional<ZookeeperConnectionType> optType = Arrays.stream(ZookeeperConnectionType.values())
+        final ZookeeperConnectionType type = Arrays.stream(ZookeeperConnectionType.values())
                 .filter(v -> v.name().equalsIgnoreCase(typeString))
-                .findAny();
-        if (!optType.isPresent()) {
-            throw new RuntimeException("Can not detect type of connection from " + typeString + " in " + connStr);
-        }
-        final ZookeeperConnectionType type = optType.get();
+                .findAny()
+                .orElseThrow(() ->
+                        new RuntimeException("Can not detect type of connection" + typeString + " in " + connStr));
 
         final String[] hostsPorts = m.group(2).split(",");
         final List<Integer> ports = Arrays.stream(hostsPorts)
