@@ -65,11 +65,11 @@ public class StorageDbRepositoryTest extends AbstractDbRepositoryTest {
         final String namePrefix = randomValidStringOfLength(31);
 
         final Storage storage2 = repository.createStorage(
-                createStorage(namePrefix + "2", ZookeeperConnection.valueOf("exhibitor://exaddress:8181/path")));
+                createStorage(namePrefix + "2", ZookeeperConnection.valueOf("exhibitor://exaddress1:8181/path3")));
         final Storage storage1 = repository.createStorage(
-                createStorage(namePrefix + "1", ZookeeperConnection.valueOf("exhibitor://exaddress:8181/path")));
+                createStorage(namePrefix + "1", ZookeeperConnection.valueOf("exhibitor://exaddress2:8181/path2")));
         final Storage storage3 = repository.createStorage(
-                createStorage(namePrefix + "3", ZookeeperConnection.valueOf("exhibitor://exaddress:8181/path")));
+                createStorage(namePrefix + "3", ZookeeperConnection.valueOf("exhibitor://exaddress3:8181/path1")));
 
         final List<Storage> storages = repository.listStorages().stream()
                 .filter(st -> st.getId() != null)
